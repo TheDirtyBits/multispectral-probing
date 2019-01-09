@@ -8,7 +8,8 @@ Repository to analyze multispectral image data and extract useful information
 
 The manifold viewer is to be used to easily view the .tif files.  
 Create an environment in Anaconda and install GDAL in it.  
-Follow the GDAL tutorial to understand the tutorial.py script.
+Follow the GDAL tutorial to understand the tutorial.py script.  
+All the multispectral files can be accessed [here](https://drive.google.com/drive/folders/1uvfBOG4HxillOsGAQOJCioEOG5SRAQir?usp=sharing).
 
 ### Useful Links
 1. [GDAL website](https://www.gdal.org/)
