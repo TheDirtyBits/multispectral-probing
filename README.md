@@ -14,3 +14,4 @@ Follow the GDAL tutorial to understand the tutorial.py script.
 1. [GDAL website](https://www.gdal.org/)
 2. [GDAL basic tutorial](https://www.gdal.org/gdal_tutorial.html)
 3. [GDAL python api](https://gdal.org/python/)
+4. [Sample GeoTIFF files](https://sih.isro.gov.in/samples/P7/)
