@@ -1,10 +1,10 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from osgeo import gdal
-import numpy as np
+import image_operations
 import os
 
 root = Tk()
+root.state('zoomed')
 
 ip_file_text = StringVar()
 op_file_text = StringVar()
@@ -12,42 +12,36 @@ r_text = StringVar()
 g_text = StringVar()
 b_text = StringVar()
 grayscale_radio_option = IntVar()
-input_image_name = None
-input_image = None
-input_image_preview = None
-image_label: Label = None
-dataset: gdal.Dataset = None
-new_dataset: gdal.Dataset = None
+
 
 def save():
     # Save the constructed image with op_file_text
-    pass
+    input_image_name = ip_file_text.get()
+    image_operations.transform_image(input_image_name, r_text.get(), g_text.get(), b_text.get(),
+                                     save=True, save_name=op_file_text.get())
 
 
 def preview():
-    # Construct new image and display
-    # new = cv2.resize(original, (800, 600))
-
-    pass
+    # Preview the changes
+    input_image_name = ip_file_text.get()
+    image_operations.transform_image(input_image_name, r_text.get(), g_text.get(), b_text.get())
+    preview_image_load = Image.open("preview_" + input_image_name[:-3] + "png")
+    preview_image = ImageTk.PhotoImage(preview_image_load)
+    image_label.configure(image=preview_image)
+    image_label.image = preview_image
 
 
 def original():
     # Show the original image
     input_image_name = ip_file_text.get()
-    if os.path.isfile(input_image_name):
-        dataset: gdal.Dataset = gdal.Open("Junagadhoutput.tif", gdal.GA_ReadOnly)
-        if not os.path.isfile("temp_"+input_image_name):
-            driver = dataset.GetDriver()
-            new_dataset = driver.CreateCopy("temp_"+input_image_name, dataset, strict=0)
-        if not os.path.isfile("preview_" + input_image_name[:-3] + ".bmp"):
-            # Generate preview
-            new = cv2.resize(original, (800, 600))
-
-            pass
-        original = Image.open("preview_" + input_image_name[:-3] + ".bmp")
-        resized = original.resize((300, 300))
-        image = ImageTk.PhotoImage(resized)
-        image_label.image = image
+    if not os.path.isfile("original_"+input_image_name[:-3]+"png"):
+        print("Creating original image")
+        image_operations.create_original(input_image_name)
+    print("Showing original image")
+    original_image_load = Image.open("original_"+input_image_name[:-3]+"png")
+    original_image = ImageTk.PhotoImage(original_image_load)
+    image_label.configure(image=original_image)
+    image_label.image = original_image
 
 
 if __name__ == "__main__":
@@ -56,6 +50,7 @@ if __name__ == "__main__":
     ip_file_label = Label(ip_frame, text="Input file")
     ip_file_label.pack(side=LEFT)
     ip_file_entry = Entry(ip_frame, bd=5, textvariable=ip_file_text)
+    ip_file_entry.insert(0, "Junagadhoutput.tif")
     ip_file_entry.pack(side=LEFT)
 
     op_frame = Frame(root)
@@ -111,11 +106,11 @@ if __name__ == "__main__":
 
     button_frame = Frame(root)
     button_frame.pack()
-    save_button = Button(button_frame, text="Save shit", command=save)
+    save_button = Button(button_frame, text="Save", command=save)
     save_button.pack(side=LEFT)
-    preview_button = Button(button_frame, text="Preview shit", command=preview)
+    preview_button = Button(button_frame, text="Preview", command=preview)
     preview_button.pack(side=LEFT)
-    original_button = Button(button_frame, text="The original shit", command=original)
+    original_button = Button(button_frame, text="The original", command=original)
     original_button.pack(side=LEFT)
 
     root.mainloop()
